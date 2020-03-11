@@ -11,8 +11,8 @@ class Form extends React.Component {
     this.registerInput = this.registerInput.bind(this);
     this.handlePageInputChanged = this.handlePageInputChanged.bind(this);
     this.validateInput = this.validateInput.bind(this);
-    this.prevPage = this.prevPage.bind(this);
-    this.nextPage = this.nextPage.bind(this);
+    this.goToPrevPage = this.goToPrevPage.bind(this);
+    this.goToNextPage = this.goToNextPage.bind(this);
     this.submitForm = this.submitForm.bind(this);
 
     this.state = {
@@ -36,8 +36,8 @@ class Form extends React.Component {
         registerPage: this.registerPage,
         registerInput: this.registerInput,
         handlePageInputChanged: this.handlePageInputChanged,
-        prevPage: this.prevPage,
-        nextPage: this.nextPage,
+        goToPrevPage: this.goToPrevPage,
+        goToNextPage: this.goToNextPage,
         submitForm: this.submitForm,
       },
     };
@@ -61,16 +61,18 @@ class Form extends React.Component {
     });
   }
 
+  // The method used to validate inputs if the user doesn't supply one.
+  // Defaults to passing validation for inputs that are initializing.
+  static defaultValidationFn = (inputName, inputValue, isInitializing) => ({
+    isValid: !isInitializing,
+    validationMessage: '',
+  });
+
   // Validate an input's value using a user-defined function, or the default.
   // `isInitializing` is true when the initial value is set on the input.
   // `isValid` being false disables buttons for going to the next page of the form.
-  validateInput({inputName, inputValue, isInitializing}) {
-    const defaultFn = (() => ({
-      isValid: !isInitializing,
-      validationMessage: '',
-    }));
-
-    const fn = this.props.validationFn || defaultFn;
+  validateInput(inputName, inputValue, isInitializing) {
+    const fn = this.props.validationFn || Form.defaultValidationFn;
     return fn(inputName, inputValue, isInitializing);
   }
 
@@ -91,7 +93,7 @@ class Form extends React.Component {
     this.setState((state) => {
       const formContext = state.formContext;
 
-      const { isValid, validationMessage } = this.validateInput({inputName, inputValue, isInitializing});
+      const { isValid, validationMessage } = this.validateInput(inputName, inputValue, isInitializing);
 
       // Write the data for the input.
       const inputs = {
@@ -129,62 +131,46 @@ class Form extends React.Component {
     });
   }
 
-  // Move to the previous page in the form,
-  // allowing user-defined transitions to complete.
-  prevPage(event) {
-    event.preventDefault();
+  // Transition pages backward or forward.
+  transitionPage(direction) {
+    const offset = direction === 'forward' ? 1 : -1;
 
-    this.setState({ transitionDirection: 'backward' });
-
-    const transitionFn = this.props.transitionFn || Promise.resolve;
-    transitionFn().then(() => {
-      this.setState((state) => {
-        const formContext = state.formContext;
-        // Make sure we don't go out of the array bounds.
-        const prevPageIndex = Math.max(0, formContext.currentPageIndex - 1);
-        const prevPage = formContext.pages[prevPageIndex];
-        const isCurrentPageValid = prevPage.isValid;
-
-        return {
-          transitionDirection: null,
-          formContext: {
-            ...formContext,
-            currentPageIndex: prevPageIndex,
-            isCurrentPageValid,
-          }
-        };
-      });
-    });
-  }
-
-  // Move to the previous page in the form,
-  // allowing user-defined transitions to complete.
-  nextPage(event) {
-    event.preventDefault();
-    this.navigateToNextPage();
-  }
-
-  navigateToNextPage() {
-    this.setState({ transitionDirection: 'forward' });
+    this.setState({ transitionDirection: direction});
 
     const transitionFn = this.props.transitionFn || Promise.resolve;
     transitionFn().then(() => {
       this.setState((state) => {
         const formContext = state.formContext;
-        // Make sure we don't go out of the array bounds.
+        // Prevent indexing out of bounds.
         const pageCount = Object.keys(formContext.pages).length - 1;
-        const nextPageIndex = Math.min(pageCount, formContext.currentPageIndex + 1);
-        const isCurrentPageValid = formContext.pages[nextPageIndex].isValid;
+        const pageIndex = Math.max(0, Math.min(pageCount, formContext.currentPageIndex + offset));
+        const page = formContext.pages[pageIndex];
+        const isCurrentPageValid = page.isValid;
+
         return {
           transitionDirection: null,
           formContext: {
             ...formContext,
-            currentPageIndex: nextPageIndex,
+            currentPageIndex: pageIndex,
             isCurrentPageValid,
           }
         };
       });
     });
+  }
+
+  // Move to the previous page in the form,
+  // allowing user-defined transitions to complete.
+  goToPrevPage(event) {
+    event.preventDefault();
+    this.transitionPage('backward')
+  }
+
+  // Move to the previous page in the form,
+  // allowing user-defined transitions to complete.
+  goToNextPage(event) {
+    event.preventDefault();
+    this.transitionPage('forward')
   }
 
   // Submit form data, and show a user-defined view while it's in flight.
@@ -195,30 +181,31 @@ class Form extends React.Component {
     this.setState({ isSubmitting: true });
 
     setTimeout(() => {
-      this.navigateToNextPage();
+      this.transitionPage('forward')
       this.setState({ isSubmitting: false });
     }, 2000);
   }
 
   render() {
-    const classNames = [this.state.formContext.classPrefix];
+    const classPrefix = this.state.formContext.classPrefix
+    const classNames = [classPrefix];
     const {
       isSubmitting,
       transitionDirection,
     } = this.state;
 
     if (isSubmitting) {
-      classNames.push(`${this.state.formContext.classPrefix}--submitting`)
+      classNames.push(`${classPrefix}--submitting`)
     }
     if (transitionDirection) {
-      classNames.push(`${this.state.formContext.classPrefix}--transitioning${transitionDirection}`)
+      classNames.push(`${classPrefix}--transitioning${transitionDirection}`)
     }
 
     return (
       <FormContext.Provider value={this.state.formContext}>
         <form className={classNames.join(' ')}>
           {this.props.children}
-          {isSubmitting && React.cloneElement(this.props.loadingView, { className: `${this.state.formContext.classPrefix}__loading`})}
+          {isSubmitting && React.cloneElement(this.props.loadingView, { className: `${classPrefix}__loading`})}
         </form>
       </FormContext.Provider>
     );

@@ -6,7 +6,7 @@ import {
   Field,
   PrevPageButton,
   NextPageButton,
-  CompleteButton,
+  SubmitButton,
   ConfirmationScreen,
 } from './components/form';
 
@@ -85,7 +85,7 @@ class App extends React.Component {
           <Field type="text" name="lastname" label="Last Name" />
           <Field type="text" name="age" label="Age" />
           <PrevPageButton>Previous Page</PrevPageButton>
-          <CompleteButton>Complete</CompleteButton>
+          <SubmitButton>Submit</SubmitButton>
         </Page>
         <Page>
           <ConfirmationScreen>

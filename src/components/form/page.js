@@ -9,7 +9,7 @@ class Page extends React.Component {
     super(props);
     this.registerInput = this.registerInput.bind(this);
     this.handleInputChanged = this.handleInputChanged.bind(this);
-    this.props.registerPage(this.props.pageIndex);
+    props.registerPage(this.props.pageIndex);
   }
 
   registerInput(inputName, inputValue) {
@@ -29,14 +29,15 @@ class Page extends React.Component {
       className,
     } = this.props;
 
-    let classNames = [`${this.context.classPrefix}__page`];
+    const classPrefix = this.context.classPrefix;
+    let classNames = [`${classPrefix}__page`];
 
     if (isCurrentPage) {
-      classNames.push(`${this.context.classPrefix}__page--current`);
+      classNames.push(`${classPrefix}__page--current`);
     } else if (isPreviousPage) {
-      classNames.push(`${this.context.classPrefix}__page--previous`);
+      classNames.push(`${classPrefix}__page--previous`);
     } else if (isNextPage) {
-      classNames.push(`${this.context.classPrefix}__page--next`);
+      classNames.push(`${classPrefix}__page--next`);
     }
 
     if (className) {
@@ -55,6 +56,5 @@ class Page extends React.Component {
     );
   }
 }
-Page.contextType = FormContext;
 
 export default Page;

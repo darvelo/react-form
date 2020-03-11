@@ -93,6 +93,7 @@
 
 .form__validationError {
     margin-bottom: 20px;
+    color: red;
 }
 
 .form__button { }
@@ -101,7 +102,7 @@
 
 .form__prevButton { }
 
-.form__completeButton { }
+.form__submitButton { }
 
 .form__confirmationScreen { }
 

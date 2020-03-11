@@ -33,14 +33,9 @@ class Field extends React.Component {
       type
     } = this.props;
 
-    let isValid = true;
-    let validationMessage = '';
-
     const input = this.context.inputs[name];
-    if (input) {
-      isValid = input.isValid;
-      validationMessage = input.validationMessage;
-    }
+    const isValid = input ? input.isValid : true;
+    const validationMessage = input ? input.validationMessage : '';
 
     return (
       <>

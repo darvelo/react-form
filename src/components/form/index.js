@@ -6,7 +6,7 @@ import ConfirmationScreen from './confirmation-screen';
 import {
   PrevPageButton,
   NextPageButton,
-  CompleteButton,
+  SubmitButton,
 } from './buttons';
 
 export {
@@ -16,6 +16,6 @@ export {
   Field,
   PrevPageButton,
   NextPageButton,
-  CompleteButton,
+  SubmitButton,
   ConfirmationScreen,
 };

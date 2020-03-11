@@ -8,8 +8,8 @@ class FormNavButton extends React.Component {
 
   render() {
     const { direction } = this.props;
+    let isDisabled = false;
 
-    let isDisabled = false
     if (direction === "next") {
       const isPageInvalid = !this.context.isCurrentPageValid;
       const isLastPage = this.context.currentPageIndex === this.context.pages.length - 1;
@@ -21,7 +21,7 @@ class FormNavButton extends React.Component {
       isDisabled = isFirstPage;
     }
 
-    const clickAction = direction === "next" ? this.context.nextPage : this.context.prevPage;
+    const clickAction = direction === "next" ? this.context.goToNextPage : this.context.goToPrevPage;
 
     return (
       <button
@@ -37,24 +37,16 @@ class FormNavButton extends React.Component {
 
 // A button that causes the form to move back one page.
 class PrevPageButton extends React.Component {
-  static contextType = FormContext;
-
-  render() {
-    return <FormNavButton direction="prev">{this.props.children}</FormNavButton>
-  }
+  render = () => <FormNavButton direction="prev">{this.props.children}</FormNavButton>
 }
 
 // A button that causes the form to move forward one page.
 class NextPageButton extends React.Component {
-  static contextType = FormContext;
-
-  render() {
-    return <FormNavButton direction="next">{this.props.children}</FormNavButton>
-  }
+  render = () => <FormNavButton direction="next">{this.props.children}</FormNavButton>
 }
 
 // A button that causes the form to submit data to the server.
-class CompleteButton extends React.Component {
+class SubmitButton extends React.Component {
   static contextType = FormContext;
 
   render() {
@@ -65,7 +57,7 @@ class CompleteButton extends React.Component {
         type="submit"
         disabled={isFormInvalid}
         onClick={this.context.submitForm}
-        className={`${this.context.classPrefix}__button ${this.context.classPrefix}__completeButton`}
+        className={`${this.context.classPrefix}__button ${this.context.classPrefix}__submitButton`}
       >
         {this.props.children}
       </button>
@@ -76,5 +68,5 @@ class CompleteButton extends React.Component {
 export {
   PrevPageButton,
   NextPageButton,
-  CompleteButton,
+  SubmitButton,
 }
