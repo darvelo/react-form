@@ -76,12 +76,13 @@ class App extends React.Component {
     >
       <Pages>
         <Page>
-          <Field type="text" name="firstname" label="First Name" />
-          <Field type="text" name="lastname" label="Last Name" />
+          <Field type="email" name="email" label="Email" />
+          <Field type="password" name="password" label="Password" />
           <NextPageButton>Next Page</NextPageButton>
         </Page>
         <Page>
-          <Field type="email" name="email" label="Email" />
+          <Field type="text" name="firstname" label="First Name" />
+          <Field type="text" name="lastname" label="Last Name" />
           <Field type="text" name="age" label="Age" />
           <PrevPageButton>Previous Page</PrevPageButton>
           <CompleteButton>Complete</CompleteButton>
