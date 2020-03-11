@@ -35,6 +35,7 @@
 .form--submitting .form__pages {
     opacity: 0.6;
     filter: blur(4px);
+    pointer-events: none;
 }
 
 .form--submitting .form__loading {
