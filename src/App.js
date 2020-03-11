@@ -30,7 +30,7 @@ class App extends React.Component {
     switch (inputName) {
       case 'firstname':
         if (inputValue === 'Bob') {
-          isValid = false
+          isValid = false;
           validationMessage = 'No Bobs allowed.';
         }
         break;
@@ -39,12 +39,12 @@ class App extends React.Component {
         const age = Number(inputValue);
         if (isNaN(age) || age <= 13) {
           isValid = false;
-          validationMessage = 'Must be older than 13.'
+          validationMessage = 'Must be older than 13.';
         }
         break;
 
       default:
-        break
+        break;
     }
 
     return {isValid, validationMessage};
