@@ -33,7 +33,7 @@
 }
 
 .form--submitting .form__pages {
-    opacity: 60%;
+    opacity: 0.6;
     filter: blur(4px);
 }
 
