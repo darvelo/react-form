@@ -55,7 +55,7 @@ class App extends React.Component {
   // @return Promise
   transitionFn() {
     return new Promise((resolve, reject) => {
-      setTimeout(resolve, 300);
+      setTimeout(resolve, 350);
     });
   }
 
