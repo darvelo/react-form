@@ -9,6 +9,7 @@
     left: 0;
     background: #DADADA;
     overflow: hidden;
+    border-radius: 5px;
 }
 
 @media screen and (min-width: 800px) {
