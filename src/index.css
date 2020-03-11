@@ -51,33 +51,35 @@
     left: 0;
 }
 
+
 .form__page--current,
 .form__page--next,
 .form__page--previous {
     display: block;
-    transition: transform .3s linear;
+    transition: left .3s linear;
 }
 
 .form--transitioningforward .form__page--current {
-    transform: translateX(-100%);
+    left: -100%;
 }
 .form--transitioningbackward .form__page--current {
-    transform: translateX(100%);
+    left: 100%;
 }
 
 .form__page--previous {
-    transform: translateX(-100%);
+    left: -100%;
 }
 .form--transitioningbackward .form__page--previous {
-    transform: translateX(0);
+    left: 0;
 }
 
 .form__page--next {
-    transform: translateX(100%);
+    left: 100%;
 }
 .form--transitioningforward .form__page--next {
-    transform: translateX(0);
+    left: 0;
 }
+
 
 .form__label {
     display: block;
