@@ -19,7 +19,11 @@ There are 8 public components:
 
 ## Validation
 
-I created a form validation mechanism where a function can be passed as a prop into the `Form` and used to validate any of the form fields, with optional validation messages. `NextPageButton`s will be disabled if, when a form field value is passed into the function, it returns `isValid: false`. If it also returns a `valdationMessage` string, that'll be the message displayed when `isValid` is `false`.
+I created a form validation mechanism where a function can be passed as a prop into the `Form` and used to validate any of the form fields, with optional validation messages.
+
+The signature of the function is `validationFn(inputName, inputValue, isInitializing)`, where `inputName` is the name attribute of the input element, `inputValue` is its current value, and `isInitializing` is a flag that signifies whether the value was set because the field was just attached to the DOM. The function should return an object with the shape: `{isValid: Boolean, validationMessage: string?}`. `validationMessage` is displayed under the field when `isValid` is `false`.
+
+`NextPageButton`s will be disabled if `validationFn` returns `isValid: false` for a field on the page.
 
 ## User-defined Transitions
 
@@ -36,3 +40,9 @@ $ docker-compose up --build
 ```
 
 Then navigate to `https://localhost:3000` to see it in action.
+
+## Considerations
+
+### Full Name vs. First Name, Last Name
+
+Splitting the full name field into two is a low effort, low cost endeavour, but brings a lot of benefits. Separating the list allows you to personalize messages by first name, and allows searching the database by last name if the need arises, such as to correlate familial ties or duplicate entries. If pursuing internationalization support, splitting the fields in two could also make it easier to present the "Last Name" field first for cultures where the surname is given first preference in reading.
